@@ -218,7 +218,7 @@ func main() {
 	newEnviron := os.Environ()
 
 	for key, value := range userConfiguration.Environment {
-		newEnviron = append(newEnviron, fmt.Sprintf("%s=%s", key, value))
+		newEnviron = append(newEnviron, fmt.Sprintf("%s=%s", key, os.ExpandEnv(value)))
 	}
 
 	cmdHandle.Env = newEnviron
