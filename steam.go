@@ -28,16 +28,14 @@ func enrichSteamAppIdByExe(configuration *Configuration, nonFlagsArgsString stri
 				}
 				defer file.Close()
 
-				reader := bufio.NewReader(file)
-				appId, err := reader.ReadString('\n')
+				scanner := bufio.NewScanner(file)
+				scanner.Split(bufio.ScanLines)
 
-				if err != nil {
-					log.Fatalf("Failed to read line: %s\n", err)
-					return
+				for scanner.Scan() {
+
+					configuration.props["steam-appid"] = scanner.Text()
+					configuration.props["id"] = scanner.Text()
 				}
-
-				configuration.props["steam-appid"] = string(appId[:len(appId)-1])
-				configuration.props["id"] = string(appId[:len(appId)-1])
 			}
 		}
 	}

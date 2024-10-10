@@ -180,6 +180,7 @@ func main() {
 
 	if oldSteamCompatData, exists := os.LookupEnv("STEAM_COMPAT_DATA_PATH"); exists {
 		log.Println("Detected steam compat data variables")
+        log.Printf("Original Command: %s", nonFlagsArgsString)
 		enrichSteamAppIdByExe(&userConfiguration, nonFlagsArgsString)
 		enrichSteamAppIdByArgs(&userConfiguration, nonFlagsArgsString)
 		enrichGameName(&userConfiguration, appNamesCacheFolder)
@@ -376,25 +377,25 @@ func applyConfigOverrides(currentConfiguration *Configuration, overrideConfigura
 
 	for _, umuArg := range overrideConfiguration.Umu.Args {
 		if !slices.Contains(currentConfiguration.Umu.Args, umuArg) {
-			currentConfiguration.Umu.Args = append(currentConfiguration.Umu.Args, umuArg)
+			currentConfiguration.Umu.Args = append(currentConfiguration.Umu.Args, os.ExpandEnv(umuArg))
 		}
 	}
 
 	for _, gamescopeArg := range overrideConfiguration.Gamescope.Args {
 		if !slices.Contains(currentConfiguration.Gamescope.Args, gamescopeArg) {
-			currentConfiguration.Gamescope.Args = append(currentConfiguration.Gamescope.Args, gamescopeArg)
+			currentConfiguration.Gamescope.Args = append(currentConfiguration.Gamescope.Args, os.ExpandEnv(gamescopeArg))
 		}
 	}
 
 	for _, preScript := range overrideConfiguration.PreScripts {
 		if !slices.Contains(currentConfiguration.PreScripts, preScript) {
-			currentConfiguration.PreScripts = append(currentConfiguration.PreScripts, preScript)
+			currentConfiguration.PreScripts = append(currentConfiguration.PreScripts, os.ExpandEnv(preScript))
 		}
 	}
 
 	for _, postScript := range overrideConfiguration.PostScripts {
 		if !slices.Contains(currentConfiguration.PostScripts, postScript) {
-			currentConfiguration.PostScripts = append(currentConfiguration.PostScripts, postScript)
+			currentConfiguration.PostScripts = append(currentConfiguration.PostScripts, os.ExpandEnv(postScript))
 		}
 	}
 }
